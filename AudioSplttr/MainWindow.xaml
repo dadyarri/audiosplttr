@@ -1,0 +1,103 @@
+﻿<Window x:Class="AudioSplttr.MainWindow"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+        xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+        mc:Ignorable="d"
+        Title="AudioSplttr" Height="500" Width="500"
+        Name="Window">
+    <TabControl>
+        <TabItem Name="SplttrTab">
+            <TabItem.Header>Сплиттер</TabItem.Header>
+            <TabItem.Content>
+                <StackPanel Orientation="Vertical" Margin="10">
+                    <WrapPanel HorizontalAlignment="Left" DockPanel.Dock="Top" Margin="0,0,0,10">
+                        <Label Content="Исходный файл дорожки" Margin="0 0 10 0"
+                               Target="{Binding ElementName=TextBoxOriginalFilePath}" />
+                        <TextBox Name="TextBoxOriginalFilePath" Text="Файл не выбран" Margin="0 0 10 0" Padding="5"
+                                 IsEnabled="False" MaxWidth="{Binding ElementName=Window, Path=ActualWidth}" />
+                        <Button Name="BtnOpenOriginalFile" Click="BtnOpenOriginalFile_Click" Padding="5">Обзор</Button>
+                    </WrapPanel>
+                    <WrapPanel HorizontalAlignment="Left" Margin="0,0,0,10">
+                        <Label Content="Выходная директория" Margin="0 0 10 0"
+                               Target="{Binding ElementName=TextBoxOutputPath}" />
+                        <TextBox Name="TextBoxOutputPath" Text="Папка не выбрана" Margin="0 0 10 0" Padding="5"
+                                 IsEnabled="False" />
+                        <Button Name="BtnChooseOutputPath" Click="BtnChooseOutputPath_Click" Padding="5">Обзор</Button>
+                    </WrapPanel>
+                    <WrapPanel HorizontalAlignment="Left" Margin="0,0,0,10">
+                        <Label Content="Длина паузы" Margin="0 0 10 0"
+                               Target="{Binding ElementName=TextBoxPauseLength}"
+                               ToolTip="Минимальная длина тишины, который считать за черту между фрагментами" />
+                        <TextBox Name="TextBoxPauseLength" Text="1" Margin="0 0 10 0" Padding="7 5"
+                                 PreviewTextInput="NumberValidationTextBox" />
+                        <Label Content="сек." />
+                    </WrapPanel>
+                    <WrapPanel HorizontalAlignment="Left" Margin="0,0,0,10">
+                        <Label Content="Громкость тишины" Margin="0 0 10 0"
+                               Target="{Binding ElementName=TextBoxSilenceVolume}"
+                               ToolTip="Максимальный предел громкости тишины, значения ниже которого будут считаться за тишину, по которой нужно резать" />
+                        <TextBox Name="TextBoxSilenceVolume" Text="-50" Margin="0 0 10 0" Padding="7 5" />
+                        <Label Content="дБ" />
+                    </WrapPanel>
+                    <WrapPanel HorizontalAlignment="Left" Margin="0,0,0,10">
+                        <Label Content="Шаблон имени выходных файлов" Margin="0 0 10 0"
+                               Target="{Binding ElementName=TextBoxNameTemplate}"
+                               ToolTip="Максимальный предел громкости тишины, значения ниже которого будут считаться за тишину, по которой нужно резать" />
+                        <TextBox Name="TextBoxNameTemplate" Margin="0 0 10 0" Padding="7 5" MinWidth="100" />
+                    </WrapPanel>
+                    <WrapPanel HorizontalAlignment="Left" Margin="0,0,0,10">
+                        <Label Content="Путь до FFmpeg" Margin="0 0 10 0"
+                               Target="{Binding ElementName=TextBoxNameTemplate}"
+                               ToolTip="Путь до EXE файла ffmpeg" />
+                        <TextBox Name="TextBoxFFmpegPath" Text="Файл не выбран" Margin="0 0 10 0" Padding="5"
+                                 IsEnabled="False" />
+                        <Button Name="BtnChooseFFmpegPath" Click="BtnChooseFFmpegPath_Click" Padding="5">Обзор</Button>
+                    </WrapPanel>
+                    <WrapPanel HorizontalAlignment="Left" Margin="0,0,0,10">
+                        <Label Content="Формат выходных файлов" Margin="0 0 10 0"
+                               Target="{Binding ElementName=PickerFormat}" />
+                        <ComboBox Name="PickerFormat">
+                        </ComboBox>
+                    </WrapPanel>
+                    <WrapPanel HorizontalAlignment="Left" VerticalAlignment="Center" Margin="0, 0, 0, 10">
+                        <CheckBox Name="Rewrite"></CheckBox>
+                        <Label Content="Перезаписывать существующие файлы?"></Label>
+                    </WrapPanel>
+                    <WrapPanel HorizontalAlignment="Left" Margin="0,0,0,10">
+                        <Button Padding="10" Click="ButtonStart_Click" Name="ButtonStart">Начать</Button>
+                    </WrapPanel>
+                    <WrapPanel HorizontalAlignment="Left" VerticalAlignment="Center" Margin="0,0,0,10"
+                               Visibility="Collapsed" Name="ProgressBarParent">
+                        <Label Content="Прогресс сплита"></Label>
+                        <ProgressBar Minimum="0" Maximum="100" Value="0" Width="100" Height="10" Name="ProgressBar" />
+                    </WrapPanel>
+                </StackPanel>
+            </TabItem.Content>
+        </TabItem>
+        <TabItem Name="InjectorTab">
+            <TabItem.Header>Инжектор</TabItem.Header>
+            <TabItem.Content>
+                <StackPanel Orientation="Vertical" Margin="10">
+                    <WrapPanel HorizontalAlignment="Left" Margin="0,0,0,10">
+                        <Label Content="Папка с фрагментами" Margin="0 0 10 0"
+                               Target="{Binding ElementName=TextBoxChunksPath}" />
+                        <TextBox Name="TextBoxChunksPath" Text="Папка не выбрана" Margin="0 0 10 0" Padding="5"
+                                 IsEnabled="False" />
+                        <Button Name="BtnChooseChunksPath" Click="BtnChooseChunksPath_OnClick" Padding="5">Обзор</Button>
+                    </WrapPanel>
+                    <WrapPanel HorizontalAlignment="Left" Margin="0,0,0,10" Name="PanelExistingFile">
+                        <Label Content="Файл Ren'py скрипта" Margin="0 0 10 0"
+                               Target="{Binding ElementName=TextBoxExistingFilePath}" />
+                        <TextBox Name="TextBoxExistingFilePath" Text="Файл не выбран" Margin="0 0 10 0" Padding="5"
+                                 IsEnabled="False" />
+                        <Button Name="BtnChooseExistingFilePath" Click="BtnChooseExistingFilePath_OnClick" Padding="5">Обзор</Button>
+                    </WrapPanel>
+                    <WrapPanel Margin="0, 0, 0, 10">
+                        <Button Padding="10" Click="ButtonBase_OnClick">Вставить</Button>
+                    </WrapPanel>
+                </StackPanel>
+            </TabItem.Content>
+        </TabItem>
+    </TabControl>
+</Window>
